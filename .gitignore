@@ -1,0 +1,5 @@
+node_modules
+package-lock.json
+.prettierrc
+shrinkwrap.yaml
+src/config.json
