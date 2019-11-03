@@ -7,4 +7,4 @@ class Command {
     this.category = options.category || 'Misc.';
   }
 }
-module.exports = Command 
+module.exports = Command;

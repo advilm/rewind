@@ -2,12 +2,15 @@ class Utils {
   constructor() {}
 
   parseFlags(str) {
-    var flags = {}, value;
+    const flags = {}; let
+      value;
 
     const withQuotes = /\s--(\w{2,})=("(\\"|[^"])*"|'(\\'|[^'])*')/gi;
-    while ((value = withQuotes.exec(str))) flags[value[1]] = value[2]
-        .replace(/\\["']/g, function(i) { return i.slice(1);})
+    while ((value = withQuotes.exec(str))) {
+      flags[value[1]] = value[2]
+        .replace(/\\["']/g, (i) => i.slice(1))
         .slice(1, -1);
+    }
     str = str.replace(withQuotes, '');
 
     const withoutQuotes = /\s--(\w{2,})(?:=(\S+))?/gi;
@@ -23,12 +26,12 @@ class Utils {
 
   timeSince(ms) {
     if (ms >= 3.154e10) return `${(ms / 3.154e10).toFixed(2)} years`;
-    else if (ms >= 2.628e9) return `${(ms / 2.628e9).toFixed(2)} months`;
-    else if (ms >= 8.64e7) return `${(ms / 8.64e7).toFixed(2)} days`;
-    else if (ms >= 3.6e6) return `${(ms / 3.6e6).toFixed(2)} hours`;
-    else if (ms >= 60000) return `${(ms / 60000).toFixed(2)} minutes`;
-    else if (ms >= 1000) return `${(ms / 1000).toFixed(2)} seconds`;
-    else if (ms) return `${ms.toFixed(2)} milliseconds`;
+    if (ms >= 2.628e9) return `${(ms / 2.628e9).toFixed(2)} months`;
+    if (ms >= 8.64e7) return `${(ms / 8.64e7).toFixed(2)} days`;
+    if (ms >= 3.6e6) return `${(ms / 3.6e6).toFixed(2)} hours`;
+    if (ms >= 60000) return `${(ms / 60000).toFixed(2)} minutes`;
+    if (ms >= 1000) return `${(ms / 1000).toFixed(2)} seconds`;
+    if (ms) return `${ms.toFixed(2)} milliseconds`;
   }
 
   // postCode(str, type, desc) {
@@ -42,7 +45,7 @@ class Utils {
 
   createCode(length) {
     const chars = '0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
-    var str = '';
+    let str = '';
     while (length--) str += chars[(Math.random() * chars.length) | 0];
     return str;
   }
