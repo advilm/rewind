@@ -12,7 +12,7 @@ class Restart extends Command {
   }
 
   async run(msg) {
-    walk('./src/cmds').on('file', (root, stats, next) => {
+    walk('./src/commands').on('file', (root, stats, next) => {
       delete require.cache[require.resolve(`${resolve(root)}/${stats.name}`)];
       next();
     });

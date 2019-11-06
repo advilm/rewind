@@ -12,7 +12,7 @@ class Handler {
     this.aliases = new Discord.Collection();
     this.client = client;
 
-    walk('./src/cmds/.').on('file', (root, stats, next) => {
+    walk('./src/commands').on('file', (root, stats, next) => {
       const Command = require(`${resolve(root)}/${stats.name}`);
       const command = new Command();
       command.client = this.client;

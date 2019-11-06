@@ -1,6 +1,5 @@
 module.exports = {
     'env': {
-        'commonjs': true,
         'es6': true,
         'node': true
     },
@@ -10,7 +9,11 @@ module.exports = {
         'SharedArrayBuffer': 'readonly'
     },
     'parserOptions': {
-        'ecmaVersion': 2018
+        'ecmaVersion': 2018,
+        'sourceType': 'module',
+        'ecmaFeatures': {
+            'impliedStrict': true
+        }
     },
     'rules': {
         'indent': [

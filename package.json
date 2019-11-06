@@ -1,16 +1,14 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
   "name": "rewinded",
   "version": "0.0.1",
   "description": "Discord bot",
-  "main": "../src/index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "start": "node ../src/index.js"
+    "start": "node ./src/index.js"
   },
   "dependencies": {
     "canvas": "^2.6.0",
+    "chalk": "^2.4.2",
     "color": "^3.1.2",
     "compression": "^1.7.4",
     "discord.js": "github:discordjs/discord.js",
@@ -22,17 +20,13 @@
     "sloc": "^0.2.1",
     "walk": "^2.3.14"
   },
-  "engines": {
-    "node": "10.x"
-  },
   "repository": {
     "url": "https://github.com/advilm/Rewind/"
   },
   "license": "MIT",
   "keywords": [
-    "node",
-    "glitch",
-    "express"
+    "discord",
+    "bot"
   ],
   "devDependencies": {
     "eslint": "^6.6.0",
