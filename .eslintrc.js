@@ -4,10 +4,6 @@ module.exports = {
         'node': true
     },
     'extends': 'eslint:recommended',
-    'globals': {
-        'Atomics': 'readonly',
-        'SharedArrayBuffer': 'readonly'
-    },
     'parser': 'babel-eslint',
     'parserOptions': {
         'ecmaVersion': 2018,
@@ -33,5 +29,14 @@ module.exports = {
             'error',
             'always'
         ]
-    }
+    },
+    'overrides': [{
+        'files': ['babel.config.js'],
+        'rules': {
+            'indent': [
+                'error',
+                4
+            ]
+        }
+    }]
 };
