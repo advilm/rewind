@@ -13,5 +13,3 @@ client.once('ready', () => console.log(`Logged in as ${client.user.tag}`));
 
 client.config = require('./config.json');
 client.login(client.config.token);
-
-process.on('unhandledRejection', (error) => console.error('Unhandled promise rejection:', error));

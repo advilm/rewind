@@ -1,6 +1,1 @@
-exports.run = async (client, msg) => {
-  if (msg.author.bot) return;
-  msg.prefix = msg.content.match(/^(re+|rewind)\./i);
-  msg.prefix = msg.prefix && msg.prefix[0];
-  msg.prefix && client.handler.run(msg);
-};
+exports.run = async (client, msg) => msg.author.bot || (msg.prefix = msg.content.match(/^(re+|rewind)\./i)?.[0]) && client.handler.run(msg);

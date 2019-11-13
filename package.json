@@ -7,16 +7,11 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "canvas": "^2.6.0",
-    "chalk": "^2.4.2",
-    "color": "^3.1.2",
     "discord.js": "github:discordjs/discord.js",
-    "express": "^4.16.4",
     "mongodb": "^3.3.2",
     "mongoose": "^5.7.1",
     "node-fetch": "^2.6.0",
     "path": "^0.12.7",
-    "sloc": "^0.2.1",
     "walk": "^2.3.14"
   },
   "repository": {
@@ -32,8 +27,6 @@
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
-    "@babel/plugin-transform-strict-mode": "^7.2.0",
-    "@babel/preset-env": "^7.7.1",
     "@babel/register": "^7.7.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0"

@@ -28,6 +28,7 @@ class Restart extends Command {
     });
 
     delete this.client._events;
+    delete this.client.handler;
 
     const Handler = require('../../structures/Handler.js');
     this.client.handler = new Handler().load(this.client);
