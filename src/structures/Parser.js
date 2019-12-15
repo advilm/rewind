@@ -1,14 +1,42 @@
-class Parser {
-  constructor(content, usage) {
-    if (!usage) return;
-    this.content = content;
-    this.usage = usage;
-    this.parseUsage(usage);
-  }
+const { walk } = require('walk');
 
-  parseUsage() {
-    console.log(this.usage);
-  }
+class Parser {
+	constructor(client) {
+		this.client = client;
+		this.args = {};
+		walk('./src/structures/arguments').on('file', (root, stats, next) => {
+			this.args[stats.name.slice(0, -3).toLowerCase()] = new (require('./arguments/' + stats.name))();
+			this.args[stats.name.slice(0, -3).toLowerCase()].client = client;
+			next();
+		});
+	}
+
+	parse(msg) {
+		if (!msg.cmd.usage) return;
+		var out = [], value;
+		const regex = /\[((?:\w)*)\](\S*)/g;
+		while ((value = regex.exec(msg.cmd.usage)) !== null) out.push([value[1].toLowerCase(), value[2]]);
+    
+		var args = {}, content = msg.content;
+
+		for (const item of out) {
+			args[item[0]] || (args[item[0]] = []);
+
+			const match = this.args[item[0]].regex.exec(content);
+			const { arg, len } = this.args[item[0]].parse(match, msg);
+      
+			if (!arg && !/[*?]/.test(item[1])) {
+				this.client.error.handle('argument', item[0], msg, content);
+				return false;
+			}
+
+			content = content.slice(len);
+
+			args[item[0]].push(arg);
+		}
+
+		return args;
+	}
 }
 
 module.exports = Parser;

@@ -15,7 +15,7 @@ module.exports = {
     'rules': {
         'indent': [
             'error',
-            2
+            'tab'
         ],
         'linebreak-style': [
             'error',
@@ -26,17 +26,12 @@ module.exports = {
             'single'
         ],
         'semi': [
-            'error',
+            'warn',
             'always'
-        ]
-    },
-    'overrides': [{
-        'files': ['babel.config.js'],
-        'rules': {
-            'indent': [
-                'error',
-                4
-            ]
-        }
-    }]
+        ],
+        'no-unused-vars': [
+            'warn'
+        ],
+        "space-unary-ops"  : 2
+    }
 };
