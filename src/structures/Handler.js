@@ -14,7 +14,6 @@ class Handler {
 
 	load(client) {
 		this.client = client;
-
 		const cmdwalker = walk('./src/commands');
 		cmdwalker.on('file', (root, stats, next) => {
 			const command = new (require(`${resolve(root)}/${stats.name}`))();
@@ -37,7 +36,7 @@ class Handler {
 		});
 
 		eventwalker.on('end', () => console.log(`${Object.keys(this.client._events).length} events loaded`));
-
+				
 		return this;
 	}
 
@@ -50,7 +49,6 @@ class Handler {
 			const cmdname = msg.content.slice(msg.prefix.length).split(/ +/)[0];
 			msg.cmd = this.get(cmdname);
 			if (!msg.cmd) return;
-    
       
 			if ((this.cooldownsSent.get(msg.author.id) || 0) > 5) return;
 			if (this.cooldowns.get(msg.author.id + msg.cmd.name) > Date.now() - this.cooldown) return msg.channel.send('Command on cooldown. (1s)') && this.cooldownsSent.add(msg.author.id, 1);

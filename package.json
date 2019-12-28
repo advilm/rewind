@@ -12,23 +12,13 @@
     "color": "^3.1.2",
     "discord.js": "github:discordjs/discord.js",
     "endb": "^0.19.0",
-    "inquirer": "^7.0.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "path": "^0.12.7",
-    "quick.db": "^7.0.0-b22",
     "sql": "^0.78.0",
     "sqlite3": "^4.1.1",
     "walk": "^2.3.14"
   },
-  "repository": {
-    "url": "https://github.com/advilm/Rewind/"
-  },
-  "license": "MIT",
-  "keywords": [
-    "discord",
-    "bot"
-  ],
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
@@ -38,5 +28,13 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0",
     "eslint-plugin-react": "^7.17.0"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/advilm/Rewind/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "discord",
+    "bot"
+  ]
 }

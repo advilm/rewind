@@ -1,5 +1,5 @@
 class Utils {
-	parseFlags(str) {
+	static parseFlags(str) {
 		const flags = {}; let
 			value;
 
@@ -22,7 +22,7 @@ class Utils {
 		return { flags, content: str };
 	}
 
-	parseMS(ms, depth) {
+	static parseMS(ms, depth) {
 		depth === undefined && (depth = 2);
 		var x;
 		if (!ms) return 0;
@@ -46,7 +46,7 @@ class Utils {
 	//   return `https://${process.env.PROJECT_DOMAIN}.glitch.me/evals/${key}.html`;
 	// }
 
-	createCode(length) {
+	static createCode(length) {
 		const chars = '0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
 		let str = '';
 		while (length--) str += chars[(Math.random() * chars.length) | 0];

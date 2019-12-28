@@ -5,6 +5,7 @@ class Eval extends Command {
 	constructor() {
 		super({
 			name: 'eval',
+			usage: '[Any]',
 			aliases: ['ev'],
 			description: 'Evaluates JavaScript code.',
 		});
