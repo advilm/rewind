@@ -4,7 +4,7 @@ class User {
 	}
 
 	parse(match, msg) {
-		if (match) var arg = this.client.users.get(match[1]) || msg.guild.members.find(m => (m.nickname && m.nickname.includes(match[1])) || m.user.tag.includes(match?.[1]))?.user;
+		if (match) var arg = this.client.users.get(match[1]) || /[^\d]/.test(match[1]) && msg.guild.members.find(m => (m.nickname && m.nickname.includes(match[1])) || m.user.tag.includes(match?.[1]))?.user;
 		return { arg, len: match?.[0].length};
 	}
 }

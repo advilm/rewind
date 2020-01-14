@@ -2,7 +2,6 @@ const { walk } = require('walk');
 
 class Parser {
 	constructor(client) {
-		this.client = client;
 		this.args = {};
 		walk('./src/structures/arguments').on('file', (root, stats, next) => {
 			this.args[stats.name.slice(0, -3).toLowerCase()] = new (require('./arguments/' + stats.name))();
@@ -25,12 +24,9 @@ class Parser {
 			const match = this.args[item[0]].regex.exec(content);
 			const { arg, len } = this.args[item[0]].parse(match, msg);
       
-			if (!arg && !/[*?]/.test(item[1])) {
-				this.client.error.handle('argument', item[0], msg, content);
-				return false;
-			}
+			if (!arg && !/[*?]/.test(item[1])) return require('./Error.js').handle('argument', item[0], msg, content);
 
-			content = content.slice(len);
+			if (!(!arg && item[1].includes('?'))) content = content.slice(len);
 
 			args[item[0]].push(arg);
 		}
