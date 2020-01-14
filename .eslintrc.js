@@ -33,5 +33,14 @@ module.exports = {
             'warn'
         ],
         "space-unary-ops"  : 2
-    }
+    },
+    'overrides': [{
+        'files': ['babel.config.js'],
+        'rules': {
+            'indent': [
+                'error',
+                4
+            ]
+        }
+    }]
 };

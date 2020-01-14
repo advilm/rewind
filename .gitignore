@@ -1,8 +1,7 @@
 node_modules
 package-lock.json
 config.json
-db.sqlite
-json.sqlite
 babel.config.js
 .eslintrc.js
 .vscode
+test.js
