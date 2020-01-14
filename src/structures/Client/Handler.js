@@ -3,18 +3,21 @@ const { walk } = require('walk');
 const { resolve } = require('path');
 
 class Handler {
-	constructor() {
+	constructor(client) {
+		this.client = client;
+
 		this.commands = new Discord.Collection();
 		this.aliases = new Discord.Collection();
+
+		this.parser = new (require('../Parser.js'))(client);
 
 		this.cooldown = 1000;
 		this.cooldowns = new Map();
 		this.cooldownsSent = new Map();
 	}
 
-	load(client) {
-		this.client = client;
-		const cmdwalker = walk('./src/commands');
+	load() {
+		const cmdwalker = walk('src/commands');
 		cmdwalker.on('file', (root, stats, next) => {
 			const command = new (require(`${resolve(root)}/${stats.name}`))();
 			command.client = this.client;
@@ -28,9 +31,9 @@ class Handler {
     
 		cmdwalker.on('end', () => console.log(`${this.commands.size} commands loaded\n${this.aliases.size} aliases loaded`));
 
-		const eventwalker = walk('./src/events');
+		const eventwalker = walk('src/events');
 		eventwalker.on('file', (root, stats, next) => {
-			const Event = require('../events/' + stats.name);
+			const Event = require('../../events/' + stats.name);
 			this.client.on(stats.name.slice(0, -3), (...args) => Event.run(this.client, ...args));
 			next();
 		});
@@ -49,23 +52,24 @@ class Handler {
 			const cmdname = msg.content.slice(msg.prefix.length).split(/ +/)[0];
 			msg.cmd = this.get(cmdname);
 			if (!msg.cmd) return;
-      
+
+			msg.author.dev = this.client.config.devs.includes(msg.author.id);
+			if (msg.cmd.type === 'dev' && !msg.author.dev) return;
+
 			if ((this.cooldownsSent.get(msg.author.id) || 0) > 5) return;
-			if (this.cooldowns.get(msg.author.id + msg.cmd.name) > Date.now() - this.cooldown) return msg.channel.send('Command on cooldown. (1s)') && this.cooldownsSent.add(msg.author.id, 1);
+			if (this.cooldowns.get(msg.author.id + msg.cmd.name) > Date.now() - this.cooldown && !msg.author.dev) return msg.reply('Command on cooldown. (1s)') && this.cooldownsSent.add(msg.author.id, 1);
 			else this.cooldowns.set(msg.author.id + msg.cmd.name, Date.now());
       
 
 			msg.content = msg.content.slice(msg.prefix.length + cmdname.length + 1);
 
-			const { flags, content} = this.client.utils.parseFlags(msg.content);
-			msg.flags = flags, msg.content = content;
+			const { flags } = this.client.utils.parseFlags(msg.content);
+			msg.flags = flags;
 
-			msg.args = this.client.parser.parse(msg);
+			msg.args = this.parser.parse(msg);
 			if (msg.args === false) return;  
 
     
-			msg.author.dev = this.client.config.devs.includes(msg.author.id);
-			if (msg.cmd.type === 'dev' && !msg.author.dev) return;
       
 			const startTime = Date.now();
 			const sent = await msg.cmd.run(msg);

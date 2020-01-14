@@ -6,6 +6,6 @@ class Command {
 		this.description = options.description || 'No description specified.';
 		this.category = options.category || 'Misc.';
 	}
-	e() {}
 }
+
 module.exports = Command;
