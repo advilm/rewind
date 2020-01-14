@@ -22,7 +22,7 @@ class Restart extends Command {
     
 		walker.on('end', async () => {
 			this.client.load();
-			msg.channel.send('Reloaded `a bunch of stuff`.');
+			msg.reply('Reloaded `a bunch of stuff`.');
 		});
 	}
 }

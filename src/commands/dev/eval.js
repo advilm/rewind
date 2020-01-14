@@ -1,5 +1,4 @@
 const Command = require('../../structures/Command.js');
-const Discord = require('discord.js');
 
 class Eval extends Command {
 	constructor() {
@@ -18,7 +17,7 @@ class Eval extends Command {
 
 			try {
 				var code;
-				if (m.flags.async || m.flags.a) code = `async function xd() {\n${m.content}\n}\nxd()`;
+				if (m.flags.async || m.flags.a) code = `(async () => {\n${m.content}\n})()`;
 				else code = m.content;
        
 
@@ -42,24 +41,25 @@ class Eval extends Command {
 					var out = output.slice(11);
 					if (m.flags.v || m.flags.verbose) out = `${output}\n${type}\n${time}`;
   
-					await m.channel.send(out);
+					await msg.reply(out);
 				}
   
 			} catch (err) {
 				if (m.flags.async || m.flags.a) code = code.slice(24, -9);
-				if (!(m.flags.quiet || m.flags.q)) await m.channel.send(`**Input:**\`\`\`js\n${code.replace(/`/g, '`\u200b')}\`\`\`**Error:**\`\`\`${err.toString().replace(/`/g, '`\u200b')}\`\`\``);
+				if (!(m.flags.quiet || m.flags.q)) await m.reply(`**Input:**\`\`\`js\n${code.replace(/`/g, '`\u200b')}\`\`\`**Error:**\`\`\`${err.toString().replace(/`/g, '`\u200b')}\`\`\``);
 			}
 		};
     
 		if (!(msg.flags.s || msg.flags.session)) ev(msg);
 		else {
-			msg.channel.send(new Discord.MessageEmbed().setColor(this.client.color).setDescription('Sessions started.'));
-			const coll = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {max: 100, maxProcessed: 100});
+			ev(msg);
+			// msg.reply(new Discord.MessageEmbed().setColor(this.client.color).setDescription('Sessions started.'));
+			// const coll = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {max: 100, maxProcessed: 100});
   
-			coll.on('collect', message => {
-				if (message.content.match(/^(end|stop|quit)$/)) msg.channel.send(new Discord.MessageEmbed().setDescription('Eval session ended.')) && coll.stop();
-				else ev(message);
-			});
+			// coll.on('collect', message => {
+			// 	if (message.content.match(/^(end|stop|quit)$/)) msg.reply(new Discord.MessageEmbed().setDescription('Eval session ended.')) && coll.stop();
+			// 	else ev(message);
+			// });
 		}
 	}
 }

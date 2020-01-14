@@ -14,7 +14,7 @@ class Help extends Command {
 	async run(msg) {
 		const embed = new Discord.MessageEmbed()
 			.setDescription('```js\n' + require('util').inspect(msg.args) + '```');
-		msg.channel.send(embed);
+		msg.reply(embed);
 	}
 }
 

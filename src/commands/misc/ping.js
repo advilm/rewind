@@ -10,8 +10,8 @@ class Ping extends Command {
 	}
 
 	async run(msg) {
-		const m = await msg.channel.send('Pong.');
-		m.edit(`Heartbeat: \`${Math.round(this.client.ws.ping)}\` ms | Roundtrip: \`${(m.editedTimestamp || m.createdTimestamp) - (msg.editedTimestamp || msg.createdTimestamp)}\` ms`);
+		const m = await msg.reply('Pong.');
+		m.edit(`Heartbeat: \`${this.client.ws.ping | 0}\` ms | Roundtrip: \`${(m.editedTimestamp || m.createdTimestamp) - (msg.editedTimestamp || msg.createdTimestamp)}\` ms`);
 	}
 }
 
