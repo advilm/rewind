@@ -5,7 +5,6 @@ const Command = require('../../structures/Command.js');
 class Restart extends Command {
 	constructor() {
 		super({
-			name: 'restart',
 			aliases: ['r'],
 			description: 'Restarts.',
 		});

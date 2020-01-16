@@ -3,8 +3,7 @@ const Command = require('../../structures/Command.js');
 class Eval extends Command {
 	constructor() {
 		super({
-			name: 'eval',
-			usage: '[Any]',
+			usage: '[Flags]? [Any]',
 			aliases: ['ev'],
 			description: 'Evaluates JavaScript code.',
 		});
@@ -12,9 +11,10 @@ class Eval extends Command {
 
 	run(msg) {    
 		const ev = async (m) => {
-			const { flags, content} = m.content !== msg.content && this.client.utils.parseFlags(m.content);
-			m.content !== msg.content && (m.flags = flags) && (m.content = content);
+			m.cmd = this;
+			this.client.handler.parser.parse(m);
 
+			m.content = m.args.content;
 			try {
 				var code;
 				if (m.flags.async || m.flags.a) code = `(async () => {\n${m.content}\n})()`;

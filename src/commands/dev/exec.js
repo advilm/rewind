@@ -3,7 +3,6 @@ const Command = require('../../structures/Command.js');
 class Exec extends Command {
 	constructor() {
 		super({
-			name: 'exec',
 			usage: '[Any]',
 			aliases: ['ex'],
 			description: 'Executes stuff.',

@@ -3,7 +3,6 @@ const Command = require('../../structures/Command.js');
 class Ping extends Command {
 	constructor() {
 		super({
-			name: 'ping',
 			aliases: ['p'],
 			description: 'Pings.',
 		});

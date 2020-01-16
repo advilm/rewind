@@ -4,7 +4,6 @@ const Command = require('../../structures/Command.js');
 class Help extends Command {
 	constructor() {
 		super({
-			name: 'help',
 			aliases: ['h'],
 			usage: '[Command]?',
 			description: 'List of commands w/ descriptions.',

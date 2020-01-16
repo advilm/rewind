@@ -22,6 +22,7 @@ class Handler {
 			const command = new (require(`${resolve(root)}/${stats.name}`))();
 			command.client = this.client;
 
+			command.name = stats.name.slice(0, -3);
 			command.type = root.split('\\')[1];
 
 			this.commands.set(command.name.toLowerCase(), command);
@@ -62,13 +63,11 @@ class Handler {
       
 
 			msg.content = msg.content.slice(msg.prefix.length + cmdname.length + 1);
-
-			const { flags } = this.client.utils.parseFlags(msg.content);
-			msg.flags = flags;
-
+			
 			msg.args = this.parser.parse(msg);
 			if (msg.args === false) return;  
-
+			
+			msg.flags = msg.args?.flags?.[0] || {};
     
       
 			const startTime = Date.now();
