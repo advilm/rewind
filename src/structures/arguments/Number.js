@@ -1,6 +1,6 @@
-class Any {
+class Number {
 	constructor() {
-		this.regex = /\s*(\S+)\s?/;
+		this.regex = /\s*(-?\d+|Infinity)\s*/;
 	}
   
 	parse(match) {
@@ -9,4 +9,4 @@ class Any {
 	}
 }
 
-module.exports = Any;
+module.exports = Number;

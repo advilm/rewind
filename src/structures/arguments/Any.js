@@ -1,6 +1,6 @@
 class Any {
 	constructor() {
-		this.regex = /\s*(\S+)\s?/;
+		this.regex = /\s*(\S+)\s*/;
 	}
   
 	parse(match) {

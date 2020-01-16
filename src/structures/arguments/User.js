@@ -1,6 +1,6 @@
 class User {
 	constructor() {
-		this.regex = /\s*(?:<@!?)?(\d{17,19}|\S+)>?\s?/;
+		this.regex = /\s*(?:<@!?)?(\d{17,19}|\S+)>?\s*/;
 	}
 
 	parse(match, msg) {
