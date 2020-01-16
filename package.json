@@ -8,17 +8,21 @@
   },
   "dependencies": {
     "@tensorflow/tfjs-node": "^1.5.1",
+    "bufferutil": "^4.0.1",
     "chalk": "^3.0.0",
     "color": "^3.1.2",
     "discord.js": "github:discordjs/discord.js",
     "endb": "^0.19.3",
+    "erlpack": "^0.1.3",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "path": "^0.12.7",
     "pm2": "^4.2.1",
     "sql": "^0.78.0",
     "sqlite3": "^4.1.1",
-    "walk": "^2.3.14"
+    "utf-8-validate": "^5.0.2",
+    "walk": "^2.3.14",
+    "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.7",
