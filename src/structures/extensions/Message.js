@@ -4,9 +4,9 @@ module.exports = Class =>
 			super(...data);
 		}
 
-		async reply(content) {
+		async reply(...content) {
 			var m;
-			(this.editedTimestamp && (m = this.channel.messages.get(this.client.messages.get(this.id))?.edit(content))) || this.client.messages.set(this.id, (m = await this.channel.send(content)).id).get(this.id);
+			(this.editedTimestamp && (m = this.channel.messages.get(this.client.messages.get(this.id))?.edit(...content))) || this.client.messages.set(this.id, (m = await this.channel.send(...content)).id).get(this.id);
 			return m;
 		}
 	};
