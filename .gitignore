@@ -5,3 +5,11 @@ babel.config.js
 .eslintrc.js
 .vscode
 test.js
+src/commands/dev/new.js
+evals
+test.ahk
+chi_sim_vert.traineddata
+chi_tra_vert.traineddata
+chinese.traineddata
+english.traineddata
+traditional.traineddata
