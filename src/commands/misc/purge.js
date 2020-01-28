@@ -4,7 +4,7 @@ class Purge extends Command {
 	constructor() {
 		super({
 			aliases: ['cl', 'clear'],
-			usage: '[Flags]? [Number]',
+			usage: '[Flags]? [Integer]',
 			description: 'Purges.'
 		});
 
@@ -21,32 +21,46 @@ class Purge extends Command {
 		await msg.delete();
 
 		var purged = 0;
-		const purge = async (num = 20, opts = {}) => {
+		var interval = 2500;
+		const purge = async (num = 20, opts = {}, initial) => {
 			if (num < 1) return;
 
-			const fetched = (await msg.channel.messages.fetch({limit: num > 100 ? 100 : num, before: opts.before}));
-			if (!fetched.size) return;
+			if (initial && num <= 2000) interval = 250;
 
-			let msgs = fetched;
+			let msgs = await msg.channel.messages.fetch({limit: num > 100 ? 100 : num, before: opts.before});
+			if (!msgs.size) return;
+			const last = msgs.last().id;
 
-			if (opts.before) msgs = msgs.filter(x => x.id < opts.before);
-			if (opts.after) msgs = msgs.filter(x => x.id > opts.after);
-			if (opts.bot) msgs = msgs.filter(x => x.author.bot || /([!?]|re\.|tide|m\?ev)\s*\w/i.test(x.content));
-			if (opts.text) msgs = msgs.filter(x => x.content.includes(opts.text));
-		
-			if (!msgs.size && !opts.bot && !opts.text) return;
+			msgs = msgs.filter(x => {
+				if (opts.after && x.id <= opts.after) return;
+				if (opts.user && !(isNaN(opts.user) ? x.member.displayName.includes(opts.user): x.author.id === opts.user)) return;
+				if (opts.text && !x.content.includes(opts.text)) return;
+				if (opts.embed && !x.embeds.find(x => x.type === 'rich')) return;
+				if (opts.mention && !/<@[!#&]?\d{17,19}>|@everyone|@here/.test(x.content)) return;
+				if (opts.bot && !(x.author.bot || /^(?:[a-z]?[!?]|[-\\`]|re\.|tide|!=|qm)\s*[a-z]/i.test(x.content))) return;
+				if (opts.link && !/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(x.content)) return;
+				if (!opts.pins && x.pinned) return;
+				return true;
+			});
+
+			if (!msgs.size && !Object.keys(opts).find(x => x !== 'before' || x !== 'after')) return;
 			if (msgs.size) {
 				const old = [], recent = [];
-				msgs.map(x => (x.createdTimestamp > Date.now() - 1.21e+9) ? recent.push(x) : old.push(x));
+				msgs.map(x => x.createdTimestamp > Date.now() - 604800000 ? recent.push(x) : old.push(x));
+
 				recent.length && (purged += (await msg.channel.bulkDelete(recent)).size);
+
+				if (old.length) await this.client.sleep(2500);
 				for (const message of old) {
 					await message.delete() && purged++;
-					await require('util').promisify(setTimeout)(250);
+					if (message.id !== old[old.length - 1].id) await this.client.sleep(2500);
 				}
 			}
-				
-			await require('util').promisify(setTimeout)(1000);
-			await purge(num - 100, { ...opts, before: fetched.last().id });
+
+			if (last <= opts.before) return;
+
+			if (num - 100 > 0) await this.client.sleep(interval);
+			await purge(num - 100, { ...opts, before: last}, false);
 		};
 
 		await purge(Math.abs(Math.ceil(msg.args.number[0])), msg.flags);
