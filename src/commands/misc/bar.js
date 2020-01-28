@@ -20,14 +20,14 @@ class Bar extends Command {
 		var cb, x = await msg.reply('getting');
 		this.channels.set(msg.channel.id, x.id);
 
-		this.interval = async () =>  {
+		this.interval = async () => {
 			if (x.id !== this.channels.get(msg.channel.id)) return this.stop();
-
-			if (user.presence.activity?.name !== 'Spotify') return cb !== 'not playing' && x.edit('not playing') && (cb = 'not playing');
-			const t = Object.values(user.presence.activity.timestamps).map(x => x.getTime());
+			
+			if (!user.presence.activities.find(x => x.name === 'Spotify')) return cb !== 'not playing' && x.edit('not playing') && (cb = 'not playing');
+			const t = Object.values(user.presence.activities.find(x => x.name === 'Spotify').timestamps).map(x => x.getTime());
 			const percent = (Date.now() - t[0]) / (t[1] - t[0]);
 			length = parseInt(length) || 100;
-			const bar = '-'.repeat(Math.ceil((percent * length) > length ? length: percent * length)).slice(0, -1) + '=' + '-'.repeat((length - percent * length) > 0 ? length - percent * length: 0);
+			const bar = '-'.repeat(Math.ceil(percent * length > length ? length : percent * length)).slice(0, -1) + '=' + '-'.repeat(length - percent * length > 0 ? length - percent * length : 0);
 			cb !== bar && x.edit(bar) && (cb = bar);
 		};
 		
