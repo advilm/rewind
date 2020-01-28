@@ -9,7 +9,7 @@ class Restart extends Command {
 			description: 'Restarts.',
 		});
 	}
-	run(msg) {
+	async run(msg) {
 		const walker = walk('./src');
     
 		walker.on('file', (root, stats, next) => {
