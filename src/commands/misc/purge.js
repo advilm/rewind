@@ -63,7 +63,7 @@ class Purge extends Command {
 			await purge(num - 100, { ...opts, before: last}, false);
 		};
 
-		await purge(Math.abs(Math.ceil(msg.args.number[0])), msg.flags);
+		await purge(msg.args.integer[0], msg.flags);
 		await msg.channel.send(`Purged ${purged} messages`).then(x => x.delete({ timeout: 3000 }));
 		this.channels.delete(msg.channel.id);
 	}
