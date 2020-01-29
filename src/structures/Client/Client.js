@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 class Client extends require('discord.js').Client {
 	constructor() {
 		super({ disableEveryone: true });
@@ -16,8 +18,10 @@ class Client extends require('discord.js').Client {
 		this.config = require('../../../config.json');
 		this.handler = new (require('./Handler.js'))(this).load();
 		
-		this.db = new (require('sequelize'))('postgres://advil:9046@localhost:5432/rewind');
+		this.db = new (require('sequelize'))('postgres://advil:9046@localhost:5432/rewind', {logging: false});
 		await this.db.authenticate();
+		for (const model of fs.readdirSync('src/models')) this.db.define(model.slice(0, -3), require(`../../Models/${model}`));
+		await this.db.sync();
 		
 		this.browser = await require('puppeteer').launch();
 	}
