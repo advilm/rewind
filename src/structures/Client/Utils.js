@@ -53,6 +53,10 @@ class Utils {
 		return str;
 	}
 
+	static escapeRegEx(string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+	}
+
 	static createAce(code) {
 		return `    <!DOCTYPE html>
     <html lang="en">
