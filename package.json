@@ -10,19 +10,22 @@
     "@tensorflow/tfjs-node": "^1.5.1",
     "bufferutil": "^4.0.1",
     "chalk": "^3.0.0",
+    "discord-rpc": "^3.1.0",
     "discord.js": "github:discordjs/discord.js",
     "erlpack": "^0.1.3",
     "express": "^4.17.1",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "path": "^0.12.7",
-    "pg": "^7.17.1",
+    "performance-now": "^2.1.0",
+    "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
     "pm2": "^4.2.3",
-    "puppeteer": "^2.1.0",
-    "sequelize": "^5.21.3",
+    "puppeteer": "^2.1.1",
+    "sequelize": "^5.21.5",
     "sqlite3": "^4.1.1",
     "tesseract.js": "^2.0.2",
+    "typeorm": "^0.2.22",
     "utf-8-validate": "^5.0.2",
     "walk": "^2.3.14",
     "zlib-sync": "^0.1.6"
@@ -37,7 +40,7 @@
     "@babel/register": "^7.8.3",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.8.0",
-    "eslint-plugin-react": "^7.18.0"
+    "eslint-plugin-react": "^7.18.3"
   },
   "repository": {
     "url": "https://github.com/advilm/Rewind/"
