@@ -14,30 +14,28 @@ class Purge extends Command {
 	async run(msg) {
 		if ((!msg.member.permissions.has('MANAGE_MESSAGES') && !msg.author.dev) || !msg.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES'))
 			return msg.channel.send('Someone lacking perms');
-		
+
 		if (this.channels.get(msg.channel.id)) return msg.reply('Purge already running in this channel');
 		this.channels.set(msg.channel.id, true);
 
 		await msg.delete();
 
 		var purged = 0;
-		var interval = 2500;
-		const purge = async (num = 20, opts = {}, initial) => {
+		var interval = msg.args.integer[0] <= 2000 ? 250 : 2500;
+		const purge = async (num = 20, opts = {}) => {
 			if (num < 1) return;
 
-			if (initial && num <= 2000) interval = 250;
-
-			let msgs = await msg.channel.messages.fetch({limit: num > 100 ? 100 : num, before: opts.before});
+			let msgs = await msg.channel.messages.fetch({ limit: num > 100 ? 100 : num, before: opts.before });
 			if (!msgs.size) return;
 			const last = msgs.last().id;
 
 			msgs = msgs.filter(x => {
 				if (opts.after && x.id <= opts.after) return;
-				if (opts.user && !(isNaN(opts.user) ? x.member.displayName.includes(opts.user): x.author.id === opts.user)) return;
+				if (opts.user && !(isNaN(opts.user) ? x.member.displayName.includes(opts.user) : x.author.id === opts.user)) return;
 				if (opts.text && !x.content.includes(opts.text)) return;
 				if (opts.embed && !x.embeds.find(x => x.type === 'rich')) return;
 				if (opts.mention && !/<@[!#&]?\d{17,19}>|@everyone|@here/.test(x.content)) return;
-				if (opts.bot && !(x.author.bot || /^(?:[a-z]?[!?]|[-\\`]|re\.|tide|!=|qm)\s*[a-z]/i.test(x.content))) return;
+				if (opts.bot && !(x.author.bot || /^(?:[a-z]?[!?]|[-`\\]|re\.|tide|!=|qm)\s*[a-z]/i.test(x.content))) return;
 				if (opts.link && !/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(x.content)) return;
 				if (!opts.pins && x.pinned) return;
 				return true;
@@ -60,7 +58,7 @@ class Purge extends Command {
 			if (last <= opts.before) return;
 
 			if (num - 100 > 0) await this.client.sleep(interval);
-			await purge(num - 100, { ...opts, before: last}, false);
+			await purge(num - 100, { ...opts, before: last });
 		};
 
 		await purge(msg.args.integer[0], msg.flags);
