@@ -1,10 +1,6 @@
 node_modules
-package-lock.json
 config.json
-babel.config.js
 .eslintrc.js
 .vscode
-src/commands/dev/new.js
 evals
-english.traineddata
 eng.traineddata
