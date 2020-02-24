@@ -9,14 +9,17 @@ class Exec extends Command {
 		});
 	}
 
-	async run(msg) {    
+	async run(msg) {
 		require('child_process').exec(msg.content, async (err, stdout, stderr) => {
 			const out = `\`\`\`prolog\n${(err || '') + stderr + stdout}\`\`\``;
-			if (out.length <= 2000) msg.reply(out); 
+			if (out.length <= 2000) msg.reply(out);
 			else {
-				msg.reply(out.substr(0, 1900) + '```', new Discord.MessageEmbed().setDescription(`[Full Output](${
-					(await (await require('node-fetch')('https://evals.lunasrv.com/api/rewind/evals/create', 
-						{ method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code: (err || '') + stderr + stdout}) })).json()).url})`));
+				msg.reply({
+					content: out.substr(0, 1900) + '```',
+					embed: new Discord.MessageEmbed().setDescription(`[Full Output](${
+						(await (await require('node-fetch')('https://evals.lunasrv.com/api/rewind/evals/create',
+							{ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: (err || '') + stderr + stdout }) })).json()).url})`)
+				});
 			}
 		});
 	}
