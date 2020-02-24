@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 class Utils {
 	static parseFlags(str) {
 		const flags = {}; let
@@ -20,6 +22,18 @@ class Utils {
 		str = str.replace(shortReg, '');
 
 		return { flags, content: str };
+	}
+
+	static walk(dir) {
+		var results = [];
+		for (var file of fs.readdirSync(dir)) {
+			file = dir + '/' + file;
+			const stat = fs.statSync(file);
+			if (stat && stat.isDirectory()) results = [...results, ...this.walk(file)];
+			else results.push(file);
+		}
+
+		return results;
 	}
 
 	static parseMS(ms, depth) {
