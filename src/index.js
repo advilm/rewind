@@ -1,5 +1,3 @@
-require('@babel/register');
-
 new (require('./structures/Extender.js'))();
 new (require('./structures/Console.js'))();
 const client = new (require('./structures/client/Client.js'))();
