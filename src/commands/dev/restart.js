@@ -18,7 +18,7 @@ class Restart extends Command {
 		delete this.client._events;
 
 		await this.client.load();
-		msg.reply('Reloaded `a bunch of stuff`.');
+		msg.reply('Rewinded `a bunch of stuff`.');
 	}
 }
 

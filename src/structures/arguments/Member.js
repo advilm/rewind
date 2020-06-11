@@ -1,6 +1,6 @@
 class Member {
 	constructor() {
-		this.regex = /\s*(?:<@)?(\d{17,19}|\S+)>?\s*/;
+		this.regex = /\s*(?:<@)?(\d{17,19})>?\s*/;
 	}
   
 	parse(match, msg) {

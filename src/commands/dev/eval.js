@@ -1,5 +1,6 @@
 const Command = require('../../structures/Command.js');
 const Discord = require('discord.js');
+const fs = require('fs');
 
 class Eval extends Command {
 	constructor() {
@@ -11,61 +12,44 @@ class Eval extends Command {
 	}
 
 	async run(msg) {
-		const ev = async (m) => {
-			m.cmd = this;
-			this.client.handler.parser.parse(m);
-
-			m.content = m.args ? m.args.content : m.content;
-			try {
-				var code = msg.flags.a ? `(async () => {\n${m.content}\n})()` : m.content;
+		if (!msg.content) return;
+		try {
+			var code = msg.flags.a ? `(async () => {\n${msg.content}\n})()` : msg.content;
 
 
-				var toEval = require('@babel/core').transform(code).code;
+			var toEval = require('@babel/core').transform(code).code;
 
-				const start = process.hrtime.bigint();
-				var evaled = await eval(toEval);
-				const end = process.hrtime.bigint();
+			const start = process.hrtime.bigint();
+			var evaled = await eval(toEval);
+			const end = process.hrtime.bigint();
 
-				if (m.flags.quiet || m.flags.q) return;
 
-				var type = '**Type:**```js\n' + this.getType(evaled, 2) + '```';
+			if (msg.flags.quiet || msg.flags.q) return;
 
-				if (typeof evaled != 'string') evaled = require('util').inspect(evaled, { depth: parseInt(m.flags.depth) || 0, sorted: true });
-				evaled = evaled.replace(/`/g, '`\u200b');
+			var type = '**Type:**```js\n' + this.getType(evaled, 2) + '```';
 
-				const input = '**Input:**\n```js\n' + msg.content + '```';
-				const output = '**Output:**```js\n' + (evaled || '\'\'') + '```';
-				const time = `⏱ Evaluation took ${Math.round((Number(end) - Number(start)) / 1000)} μs`;
+			if (typeof evaled != 'string') evaled = require('util').inspect(evaled, { depth: parseInt(msg.flags.depth) || 0, sorted: true });
+			evaled = evaled.replace(/`/g, '`\u200b');
 
-				var out = `${input}${output}${type}\n${time}`;
-				if (out.length <= 2000) {
-					if (!m.flags.v) out = output;
-					await msg.reply(out);
-				} else {
-					const post = await (await require('node-fetch')('https://evals.lunasrv.com/api/rewind/evals/create',
-						{ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: evaled }) })).json();
+			const input = '**Input:**\n```js\n' + msg.content + '```';
+			const output = '**Output:**```js\n' + (evaled || '\'\'') + '```';
+			const time = `⏱ Evaluation took ${Math.round((Number(end) - Number(start)) / 1000)} μs`;
 
-					if (m.flags.v || m.flags.verbose) out = `${output.substring(0, 1500).split('\n').slice(0, -1).join('\n') + '```'}\n${type}\n${time}`;
-					else out = evaled.includes('\n') ? output.substring(0, 1500).split('\n').slice(0, -1).join('\n') + '```' : output.slice(0, 1500) + '```';
+			var out = `${input}${output}${type}\n${time}`;
+			if (out.length <= 2000) {
+				if (!msg.flags.v) out = output;
+				await msg.reply(out);
+			} else {
+				if (msg.flags.v || msg.flags.verbose) out = `${output.substring(0, 1500).split('\n').slice(0, -1).join('\n') + '```'}\n${type}\n${time}`;
+				else out = evaled.includes('\n') ? output.substring(0, 1500).split('\n').slice(0, -1).join('\n') + '```' : output.slice(0, 1500) + '```';
 
-					msg.reply({ content: out, embed: new Discord.MessageEmbed().setDescription(`[Full Output](${post ? post.url : `http://localhost:3000/evals/${post.url}`})`) });
-				}
-
-			} catch (err) {
-				if (!(m.flags.quiet || m.flags.q)) await m.reply(`**Input:**\`\`\`js\n${code.replace(/`/g, '`\u200b')}\`\`\`**Error:**\`\`\`${err.toString().replace(/`/g, '`\u200b')}\`\`\``);
+				const key = this.client.utils.createCode(6);
+				fs.writeFileSync(`evals/${key}.html`, this.client.utils.createAce(evaled));
+				msg.reply({ content: out, embed: { description: `[Full Output](https://rewind.sucks-at.codes/evals/${key})` } });
 			}
-		};
 
-		if (!(msg.flags.s || msg.flags.session)) ev(msg);
-		else {
-			ev(msg);
-			msg.reply(new Discord.MessageEmbed().setColor(this.client.color).setDescription('Sessions started.'));
-			const coll = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, { max: 100, maxProcessed: 100 });
-
-			coll.on('collect', message => {
-				if (message.content.match(/^(end|stop|quit)$/)) msg.reply(new Discord.MessageEmbed().setDescription('Eval session ended.')) && coll.stop();
-				else ev(message);
-			});
+		} catch (err) {
+			if (!(msg.flags.quiet || msg.flags.q)) await msg.reply(`**Input:**\`\`\`js\n${code.replace(/`/g, '`\u200b')}\`\`\`**Error:**\`\`\`${err.toString().replace(/`/g, '`\u200b')}\`\`\``);
 		}
 	}
 

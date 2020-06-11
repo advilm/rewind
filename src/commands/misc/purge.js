@@ -13,7 +13,7 @@ class Purge extends Command {
 
 	async run(msg) {
 		if ((!msg.member.permissions.has('MANAGE_MESSAGES') && !msg.author.dev) || !msg.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES'))
-			return msg.channel.send('Someone lacking perms');
+			return msg.reply('Someone lacking perms');
 
 		if (this.channels.get(msg.channel.id)) return msg.reply('Purge already running in this channel');
 		this.channels.set(msg.channel.id, true);
@@ -21,7 +21,7 @@ class Purge extends Command {
 		await msg.delete();
 
 		var purged = 0;
-		var interval = msg.args.integer[0] <= 2000 ? 250 : 2500;
+		var interval = parseInt(msg.content) <= 2000 ? 250 : 2500;
 		const purge = async (num = 20, opts = {}) => {
 			if (num < 1) return;
 
@@ -61,8 +61,8 @@ class Purge extends Command {
 			await purge(num - 100, { ...opts, before: last });
 		};
 
-		await purge(msg.args.integer[0], msg.flags);
-		await msg.channel.send(`Purged ${purged} messages`).then(x => x.delete({ timeout: 3000 }));
+		await purge(parseInt(msg.content), msg.flags);
+		await msg.reply(`Purged ${purged} messages`).then(x => x.delete({ timeout: 3000 }));
 		this.channels.delete(msg.channel.id);
 	}
 }

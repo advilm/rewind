@@ -7,8 +7,6 @@ class Handler {
 		this.commands = new Discord.Collection();
 		this.aliases = new Discord.Collection();
 
-		this.parser = new (require('../Parser.js'))(client);
-
 		this.cooldown = 1000;
 		this.cooldowns = new Map();
 		this.cooldownsSent = new Map();
@@ -18,9 +16,9 @@ class Handler {
 		for (const module of this.client.utils.walk('src/commands')) {
 			const command = new (require(`${process.cwd()}/${module}`))();
 
-			command.client = this.client;
+			Reflect.defineProperty(command, 'client', {value: this.client});
 			command.name = command.constructor.name.toLowerCase();
-			command.category = module.split('/').slice(0, -1).pop();
+			command.type = module.split('/').slice(0, -1).pop();
 
 			this.commands.set(command.name, command);
 			command.aliases.map(c => this.aliases.set(c, command));
@@ -43,6 +41,8 @@ class Handler {
 	}
 
 	async run(msg) {
+		if (await (this.client.bl || new Set()).has(msg.author.id) && !msg.author.dev) return;
+
 		try {
 			const cmdname = msg.content.slice(msg.prefix.length).split(/ +/)[0];
 			msg.cmd = this.get(cmdname);
@@ -58,11 +58,9 @@ class Handler {
 
 			msg.content = msg.content.slice(msg.prefix.length + cmdname.length + 1);
 
-			msg.args = this.parser.parse(msg);
-			if (msg.args === false) return;
-
-			msg.flags = msg.args?.flags?.[0] || {};
-
+			const { flags, len } = this.client.utils.parseFlags(msg.content);
+			msg.content = msg.content.slice(len);
+			msg.flags = flags;
 
 			const startTime = Date.now();
 			const sent = await msg.cmd.run(msg);
@@ -72,8 +70,8 @@ class Handler {
 
 			return sent;
 		} catch (e) {
-			msg.channel.send(`An unexpected error has occured: \`${e.toString()}\``);
-			console.error(e.stack.split('\n')[0] + '\n', e.stack.match(/\(\/home\/ubuntu\/.+?\)/g).map(x => x.slice(1, -1)).join('\n'));
+			msg.reply(`An unexpected error has occured: \`${e.toString()}\``);
+			console.error(e.stack.split('\n')[0] + '\n', e.stack.match(/\(\/home\/advil\/.+?\)/g).map(x => x.slice(1, -1)).join('\n'));
 		}
 	}
 }

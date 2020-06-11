@@ -2,8 +2,11 @@ const fs = require('fs');
 
 class Utils {
 	static parseFlags(str) {
-		const flags = {}; let
-			value;
+		str = /^\s*(?:(?:-[a-z]+|--\w{2,}(?:=(?:(?:"(?:\\"|[^"])*"|'(?:\\'|[^'])*')|\S+))?)(?:\s+|$))+/.exec(str)?.[0];
+		if (!str) return { flags: {}, len: {} };
+		const len = str.length;
+
+		const flags = {}; let value;
 
 		const withQuotes = /--(\w{2,})=("(\\"|[^"])*"|'(\\'|[^'])*')/gi;
 		while ((value = withQuotes.exec(str))) {
@@ -21,19 +24,40 @@ class Utils {
 		while ((value = shortReg.exec(str))) for (value of value[1]) flags[value] = true;
 		str = str.replace(shortReg, '');
 
-		return { flags, content: str };
+		return { flags, len };
 	}
 
 	static walk(dir) {
 		var results = [];
 		for (var file of fs.readdirSync(dir)) {
-			file = dir + '/' + file;
+			file = `${dir}/${file}`;
 			const stat = fs.statSync(file);
 			if (stat && stat.isDirectory()) results = [...results, ...this.walk(file)];
 			else results.push(file);
 		}
 
 		return results;
+	}
+
+	static userFlagsToEmoji(h) {
+		const e = {
+			DISCORD_EMPLOYEE: '<:discord_employee:705940105604366346>',
+			DISCORD_PARTNER: '<:discord_partner:705940105562423406>',
+			HYPESQUAD_EVENTS: '<:discord_hypesquad:705940105306570842>',
+			BUGHUNTER_LEVEL_1: '<:discord_bug_hunter:705940105344581652>',
+			HOUSE_BRAVERY: '<:discord_bravery:705940105164095518>',
+			HOUSE_BRILLIANCE: '<:discord_brilliance:705940104858042450>',
+			HOUSE_BALANCE: '<:discord_balance:705940105222815816>',
+			EARLY_SUPPORTER: '<:discord_early_supporter:705940105142992948>',
+			TEAM_USER: '',
+			SYSTEM: '<:discord_system:705940105273016456>',
+			BUGHUNTER_LEVEL_2: '<:discord_bug_hunter_2:705940105285599312>',
+			VERIFIED_BOT: '<:verified_bot:706219507420495914>',
+			VERIFIED_DEVELOPER: '<:discord_verified_developer:705940105575268453>'
+		};
+
+		const em = []; for (const k of h) em.push(e[k]);
+		return em;
 	}
 
 	static parseMS(ms, depth) {
@@ -49,6 +73,59 @@ class Utils {
 		else if (ms) x = `${ms.toFixed(depth)} milliseconds`;
 		if (depth === 0 && x.match(/\d+/)[0] === '1') return x.slice(0, -1);
 		else return x;
+	}
+
+	static duration(ms) {
+		let str = '';
+		if (str || ms >= 3600000) (str += `${ms / 3600000 | 0}` + ':') && (ms -= (ms / 3600000 | 0) * 3600000);
+		(str += (str ? `${ms / 60000 | 0}`.padStart(2, '0'): `${ms / 60000 | 0}`) + ':') && (ms -= (ms / 60000 | 0) * 60000);
+		str += `${ms / 1000 | 0}`.padStart(2, '0');
+		return str;
+	}
+
+	static parseDate(str, startTime = Date.now()) {
+		const dateRegex = /(?:(?:j(?:u[ln]|an)|(?:sep|oc)t|a(?:pr|ug)|ma[ry]|dec|feb|nov)|(\d+[/-]){2}\d+)/i;
+		if (dateRegex.test(str)) {
+			const now = new Date();
+			const date = new Date(str);
+	
+			if (date.toString() === 'Invalid Date') throw 'Invalid Date';
+			if (date.getFullYear() === 2001) date.setFullYear(now.getFullYear());
+			if (date < now) throw 'Date before current';
+	
+			return date;
+		} else {
+	
+			const d = `(${str.includes('.') ? '[\\d.]' : '\\d'}+)`;
+			const months = /\dm\d.*[wdhm](\d|$)|month/i.test(str);
+			const inputRegex = months ? new RegExp(`^(?:${d}(?:y|years?))?(?:${d}(?:m|months?))?(?:${d}(?:w|weeks?))?(?:${d}(?:d|days?))?(?:${d}(?:h|hrs?|hours?))?(?:${d}(?:m|mins?|minutes?))?(?:${d}(?:s|secs?|seconds?))?$`)
+				: new RegExp(`(?:${d}([a-z]+))`, 'g');
+	
+			str = str.replace(/ +/g, '').toLowerCase();
+			let m = inputRegex.exec(str);
+	
+			if (!m) throw 'Invalid Input';
+	
+			let s = 0;
+			const times = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+	
+			if (months) m.slice(1).forEach((x, i) => x && (s += (times[i] * x) | 0));
+			else {
+				const names = ['years', 'week', 'day', ['hr', 'hour'], 'minute', 'second'];
+				const groups = m.slice(1);
+				while (m = inputRegex.exec(str)) groups.push(...m.slice(1));
+	
+				for (var i = 0; i < groups.length; i += 2) {
+					const index = names.findIndex(x => Array.isArray(x) ? x.find(r => r.startsWith(groups[i + 1])) : x.startsWith(groups[i + 1]));
+					if (index === -1) throw `Invalid time value: ${groups[i + 1]}`;
+					s += times[index === 0 ? 0 : index + 1] * groups[i];
+				}
+			}
+	
+			if (s < 0) throw 'Time value too large';
+			return new Date(startTime + s * 1000);
+	
+		}
 	}
 
 	// postCode(str, type, desc) {
