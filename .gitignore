@@ -1,6 +1,4 @@
 node_modules
-config.json
-.eslintrc.js
-.vscode
 evals
-eng.traineddata
+test.js
+config.json
