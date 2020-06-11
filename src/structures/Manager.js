@@ -3,7 +3,7 @@ class Manager extends require('@lavacord/discord.js').Manager {
 		super(...args);
 	}
 
-    async join(data, opts) {
+	async join(data, opts) {
 		return super.join(data, opts);
 	}
 }
