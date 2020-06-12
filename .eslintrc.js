@@ -2,6 +2,7 @@ module.exports = {
 	'env': {
 		'commonjs': true,
 		'es2020': true,
+		'browser': true,
 		'node': true
 	},
 	'extends': 'eslint:recommended',
