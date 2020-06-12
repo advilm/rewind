@@ -1,10 +1,10 @@
 const Command = require('../../structures/Command.js');
 
-class SaveQueue extends Command {
+class SavePlaylist extends Command {
 	constructor() {
 		super({
-			description: 'Saves queue',
-			aliases: ['sq']
+			description: 'Saves queue to a playlist',
+			aliases: ['sp']
 		});
         
 	}
@@ -25,4 +25,4 @@ class SaveQueue extends Command {
 	}
 }
 
-module.exports = SaveQueue;
+module.exports = SavePlaylist;

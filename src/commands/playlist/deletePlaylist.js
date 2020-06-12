@@ -1,10 +1,10 @@
 const Command = require('../../structures/Command.js');
 
-class DeleteQueue extends Command {
+class DeletePlaylist extends Command {
 	constructor() {
 		super({
-			description: 'Deletes a queue',
-			aliases: ['dq', 'delqueue']
+			description: 'Deletes a playlist',
+			aliases: ['dp']
 		});
 
 	}
@@ -25,4 +25,4 @@ class DeleteQueue extends Command {
 	}
 }
 
-module.exports = DeleteQueue;
+module.exports = DeletePlaylist;

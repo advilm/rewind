@@ -14,10 +14,7 @@ class Eval extends Command {
 	async run(msg) {
 		if (!msg.content) return;
 		try {
-			var code = msg.flags.a ? `(async () => {\n${msg.content}\n})()` : msg.content;
-
-
-			var toEval = require('@babel/core').transform(code).code;
+			var toEval = msg.flags.a ? `(async () => {\n${msg.content}\n})()` : msg.content;
 
 			const start = process.hrtime.bigint();
 			var evaled = await eval(toEval);

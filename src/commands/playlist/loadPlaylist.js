@@ -1,10 +1,10 @@
 const Command = require('../../structures/Command.js');
 
-class LoadQueue extends Command {
+class LoadPlaylist extends Command {
 	constructor() {
 		super({
-			description: 'Loads queue',
-			aliases: ['lq']
+			description: 'Appends a playlist to queue',
+			aliases: ['lp']
 		});
         
 	}
@@ -45,7 +45,12 @@ class LoadQueue extends Command {
 			player.play(player.queue[player.position].track);
 			player.queue[player.position].volume && player.volume(player.state.volume + player.queue[player.position].volume);
 		}
+
+		this.client.wsConnections.get(msg.guild.id).forEach(ws => {
+			const { queue, position, state, timestamp, paused, shuffle, loop } = player;
+			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
+		});
 	}
 }
 
-module.exports = LoadQueue;
+module.exports = LoadPlaylist;

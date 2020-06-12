@@ -11,7 +11,7 @@ class Help extends Command {
 	async run(msg) {
 		const types = {
 			music: [],
-			queue: [],
+			playlist: [],
 			misc: []
 		};
 		this.client.handler.commands.map(c => types[c.type]?.push(`\`${c.name}\``));

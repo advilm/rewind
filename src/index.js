@@ -33,7 +33,7 @@ Reflect.defineProperty(String.prototype, 'toProperCase', {
 	}
 });
 
-Reflect.defineProperty(Map.prototype, 'toProperCase', {
+Reflect.defineProperty(Map.prototype, 'push', {
 	value: function (key, value) {
 		if (!this.has(key)) this.set(key, [value]);
 		else this.get(key).push(value);
@@ -49,35 +49,41 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use('/public', express.static(__dirname + '/public'));
 app.use('/evals', express.static(`${process.cwd()}/evals`));
 
 app.get('/', (req, res) => res.sendStatus(200));
 app.get('/evals/:name', (req, res) => require('fs').existsSync(`evals/${req.params.name}.html`) ? res.sendFile(`${process.cwd()}/evals/${req.params.name}.html`) : res.sendStatus(404));
 
 app.get('/queue/:serverid', (req, res) => {
-
+	res.sendFile(`${__dirname}/views/queue.html`);
 });
 
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 3001 });
 
 wss.on('connection', function connection(ws) {
-	const timeout = setTimeout(ws.disconnect, 1000);
+	console.log(wss.clients.size, 'Connected');
+	const timeout = setTimeout(() => ws.close(), 1000);
+	
+	ws.on('close', function close() {
+		console.log(wss.clients.size, 'Disconnected');
+	});
 
 	ws.on('message', function incoming(message) {
-		clearTimeout(timeout);
-		const data = JSON.parse(message);
+		console.log('Message received', message);
+		const data = message.split(':');
 
 		if (!client.players.has(data[1])) {
-			ws.send(JSON.stringify(['queue', null]));
-			return ws.disconnect();
+			ws.send(JSON.stringify({ status: 'ok', event: 'queueEmpty', data: null }));
+			return ws.close();
 		}
 
 		if (data[0] === 'connect') {
-			if (client.wsConnections.get(data[1])?.length >= 10) return;
+			clearTimeout(timeout);
 			const { queue, position, state, timestamp, paused, shuffle, loop } = client.players.get(data[1]);
-			ws.send(JSON.stringify(['queue', { queue, position, state, timestamp, paused, shuffle, loop }]));
-			client.wsConnections.push(ws);
+			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
+			client.wsConnections.push(data[1], ws);
 		}
 	});
 });

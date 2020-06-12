@@ -37,6 +37,11 @@ class Player extends require('@lavacord/discord.js').Player {
 
 			this.queue[this.position].volume && this.volume(this.state.volume + this.queue[this.position].volume); 
 			this.channel?.send(`Playing **${this.queue[this.position].info.title}**`);
+
+			this.node.manager.client.wsConnections.get(this.id).forEach(ws => {
+				const { queue, position, state, timestamp, paused, shuffle, loop } = this;
+				ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
+			});
 		});
 	}
 
