@@ -47,13 +47,9 @@ class Play extends Command {
 		
 		if (!player.queue.length) await player.play(song.track);
 		res.playlistInfo.name ? player.queue.push(...res.tracks) : player.queue.push(song);
-		
-		const Embed = new Discord.MessageEmbed()
-		.setColor('#12072f')
-		.setDescription(`${player.queue.length === 1 ? 
-			`<:play:721603622680657990> **__Now Playing:__** \`${song.info.title}\`` : `Added **${song.info.title}** to queue`}${res.playlistInfo.name ? ` and ${res.tracks.length - 1} other songs` : ''}`);
-			
-		msg.channel.send(Embed);
+	
+		msg.reply(`${player.queue.length === 1 ? 
+			`Playing **${song.info.title}**` : `Added **${song.info.title}** to queue`}${res.playlistInfo.name ? ` and ${res.tracks.length - 1} other songs` : ''}`);
 
 		this.client.wsConnections.get(msg.guild.id).forEach(ws => {
 			const { queue, position, state, timestamp, paused, shuffle, loop } = player;
