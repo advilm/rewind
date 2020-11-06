@@ -14,10 +14,10 @@ class Eval extends Command {
 	async run(msg) {
 		if (!msg.content) return;
 		try {
-			var toEval = msg.flags.a ? `(async () => {\n${msg.content}\n})()` : msg.content;
+			var code = msg.flags.a ? `(async () => {\n${msg.content}\n})()` : msg.content;
 
 			const start = process.hrtime.bigint();
-			var evaled = await eval(toEval);
+			var evaled = await eval(code);
 			const end = process.hrtime.bigint();
 
 

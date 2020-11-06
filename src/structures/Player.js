@@ -1,3 +1,5 @@
+const linkRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+
 class Player extends require('@lavacord/discord.js').Player {
 	constructor(...args) {
 		super(...args);
@@ -43,6 +45,10 @@ class Player extends require('@lavacord/discord.js').Player {
 				ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
 			});
 		});
+	}
+
+	play(search) {
+		
 	}
 
 	move(start, end) {

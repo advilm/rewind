@@ -44,24 +44,24 @@ class Client extends require('discord.js').Client {
 	}
 	
 	async loadConnections() {
-		const connection = await createConnection({
-			type: 'postgres',
-			url: this.config.postgresql,
-			synchronize: true,
-			entities: [
-				new EntitySchema(require('../../entities/User.js')),
-				new EntitySchema(require('../../entities/Guild.js'))
-			]
-		});
+		//const connection = await createConnection({
+		//	type: 'postgres',
+		//	url: this.config.postgresql,
+		//	synchronize: true,
+		//	entities: [
+		//		new EntitySchema(require('../../entities/User.js')),
+		//		new EntitySchema(require('../../entities/Guild.js'))
+		//	]
+		//});
 
-		this.pg = {
-			user: connection.getRepository('User'),
-			guild: connection.getRepository('Guild')
-		};
+		//this.pg = {
+		//	user: connection.getRepository('User'),
+		//	guild: connection.getRepository('Guild')
+		//};
 
-		this.redis = new Redis(this.config.redis.ip, this.config.redis.db);
+		//this.redis = new Redis(this.config.redis.ip, this.config.redis.db);
 
-		this.bl = new Set((await this.pg.user.find({ where: { blacklisted: true }, select: [ 'id' ] })).map(x => x.id));
+		//this.bl = new Set((await this.pg.user.find({ where: { blacklisted: true }, select: [ 'id' ] })).map(x => x.id));
 	}
 }
 
