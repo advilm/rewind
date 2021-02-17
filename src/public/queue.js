@@ -1,6 +1,7 @@
-const ws = new WebSocket('wss://ws.lmao-xd.wtf');
+const ws = new WebSocket('wss://rewind.advil.cf/ws');
 ws.onopen = () => ws.send(`connect:${window.location.pathname.split('/').reverse()[0]}`);
 ws.addEventListener('message', function (evt) {
+	console.log(JSON.parse(evt.data))
 	const { event, data, status } = JSON.parse(evt.data);
 	if (status === 'error') return;
 	if (event === 'queueUpdate') {
@@ -12,9 +13,8 @@ ws.addEventListener('message', function (evt) {
 });
 
 function newElement(inputValue) {
-	var li = document.createElement('li');
-	var t = document.createTextNode(inputValue);
-	li.appendChild(t);
+	const li = document.createElement('li');
+	li.appendChild(document.createTextNode(inputValue));
 
 	document.getElementById('queue').appendChild(li);
 }

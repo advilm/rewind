@@ -25,6 +25,7 @@ class Shuffle extends Command {
 			player.position = 0;
 			 
 			msg.reply(`${player.queue.length - 1} songs shuffled.`);
+			player.updateWS();
 		}
 	}
 }

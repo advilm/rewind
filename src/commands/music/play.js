@@ -51,10 +51,7 @@ class Play extends Command {
 		msg.reply(`${player.queue.length === 1 ? 
 			`Playing **${song.info.title}**` : `Added **${song.info.title}** to queue`}${res.playlistInfo.name ? ` and ${res.tracks.length - 1} other songs` : ''}`);
 
-		this.client.wsConnections.get(msg.guild.id)?.forEach(ws => {
-			const { queue, position, state, timestamp, paused, shuffle, loop } = player;
-			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
-		});
+		player.updateWS()
 	}
 }
 

@@ -64,7 +64,6 @@ const wss = new WebSocket.Server({ port: 3001 });
 
 wss.on('connection', function connection(ws) {
 	console.log(wss.clients.size, 'Connected');
-	const timeout = setTimeout(() => ws.close(), 1000);
 	
 	ws.on('close', function close() {
 		console.log(wss.clients.size, 'Disconnected');
@@ -75,12 +74,10 @@ wss.on('connection', function connection(ws) {
 		const data = message.split(':');
 
 		if (!client.players.has(data[1])) {
-			ws.send(JSON.stringify({ status: 'ok', event: 'queueEmpty', data: null }));
-			return ws.close();
+			return ws.send(JSON.stringify({ status: 'ok', event: 'queueEmpty', data: null }));
 		}
 
 		if (data[0] === 'connect') {
-			clearTimeout(timeout);
 			const { queue, position, state, timestamp, paused, shuffle, loop } = client.players.get(data[1]);
 			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
 			client.wsConnections.push(data[1], ws);

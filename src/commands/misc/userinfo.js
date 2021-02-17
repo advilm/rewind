@@ -13,7 +13,7 @@ class Userinfo extends Command {
 
 	async run(msg) {
 		const user = msg.mentions.users.first() || (msg.content && await this.client.users.fetch(msg.content)) || msg.author;
-		const member = msg.guild.member(user);
+		const member = await msg.guild.members.fetch(user);
 
 		if (!user) return msg.reply('User not found.');
 
