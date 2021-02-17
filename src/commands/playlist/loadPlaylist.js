@@ -43,7 +43,6 @@ class LoadPlaylist extends Command {
 
 		if (!player.playing) {
 			player.play(player.queue[player.position].track);
-			player.queue[player.position].volume && player.volume(player.state.volume + player.queue[player.position].volume);
 		}
 
 		this.client.wsConnections.get(msg.guild.id).forEach(ws => {

@@ -24,8 +24,6 @@ class Player extends require('@lavacord/discord.js').Player {
 				return this.channel?.send('Queue has concluded.');
 			}
 
-			this.queue[this.position].volume && this.volume(this.state.volume - this.queue[this.position].volume); 			
-
 			!this.loop && this.queue.splice(this.position, 1); 
 
 			if (this.loop !== 'single') {
@@ -37,7 +35,6 @@ class Player extends require('@lavacord/discord.js').Player {
 
 			this.play(this.queue[this.position].track);
 
-			this.queue[this.position].volume && this.volume(this.state.volume + this.queue[this.position].volume); 
 			this.channel?.send(`Playing **${this.queue[this.position].info.title}**`);
 
 			this.node.manager.client.wsConnections.get(this.id).forEach(ws => {
@@ -45,10 +42,6 @@ class Player extends require('@lavacord/discord.js').Player {
 				ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
 			});
 		});
-	}
-
-	play(search) {
-		
 	}
 
 	move(start, end) {
