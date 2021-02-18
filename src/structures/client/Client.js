@@ -1,8 +1,6 @@
 const { Manager } = require('../Manager.js');
-const { Sequelize } = require('sequelize');
 const { createConnection } = require('typeorm');
 const  { EntitySchema } = require('typeorm');
-const Redis = require('ioredis');
 require('reflect-metadata');
 
 class Client extends require('discord.js').Client {

@@ -78,54 +78,9 @@ class Utils {
 	static duration(ms) {
 		let str = '';
 		if (str || ms >= 3600000) (str += `${ms / 3600000 | 0}` + ':') && (ms -= (ms / 3600000 | 0) * 3600000);
-		(str += (str ? `${ms / 60000 | 0}`.padStart(2, '0'): `${ms / 60000 | 0}`) + ':') && (ms -= (ms / 60000 | 0) * 60000);
+		(str += (str ? `${ms / 60000 | 0}`.padStart(2, '0') : `${ms / 60000 | 0}`) + ':') && (ms -= (ms / 60000 | 0) * 60000);
 		str += `${ms / 1000 | 0}`.padStart(2, '0');
 		return str;
-	}
-
-	static parseDate(str, startTime = Date.now()) {
-		const dateRegex = /(?:(?:j(?:u[ln]|an)|(?:sep|oc)t|a(?:pr|ug)|ma[ry]|dec|feb|nov)|(\d+[/-]){2}\d+)/i;
-		if (dateRegex.test(str)) {
-			const now = new Date();
-			const date = new Date(str);
-	
-			if (date.toString() === 'Invalid Date') throw 'Invalid Date';
-			if (date.getFullYear() === 2001) date.setFullYear(now.getFullYear());
-			if (date < now) throw 'Date before current';
-	
-			return date;
-		} else {
-	
-			const d = `(${str.includes('.') ? '[\\d.]' : '\\d'}+)`;
-			const months = /\dm\d.*[wdhm](\d|$)|month/i.test(str);
-			const inputRegex = months ? new RegExp(`^(?:${d}(?:y|years?))?(?:${d}(?:m|months?))?(?:${d}(?:w|weeks?))?(?:${d}(?:d|days?))?(?:${d}(?:h|hrs?|hours?))?(?:${d}(?:m|mins?|minutes?))?(?:${d}(?:s|secs?|seconds?))?$`)
-				: new RegExp(`(?:${d}([a-z]+))`, 'g');
-	
-			str = str.replace(/ +/g, '').toLowerCase();
-			let m = inputRegex.exec(str);
-	
-			if (!m) throw 'Invalid Input';
-	
-			let s = 0;
-			const times = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
-	
-			if (months) m.slice(1).forEach((x, i) => x && (s += (times[i] * x) | 0));
-			else {
-				const names = ['years', 'week', 'day', ['hr', 'hour'], 'minute', 'second'];
-				const groups = m.slice(1);
-				while (m = inputRegex.exec(str)) groups.push(...m.slice(1));
-	
-				for (var i = 0; i < groups.length; i += 2) {
-					const index = names.findIndex(x => Array.isArray(x) ? x.find(r => r.startsWith(groups[i + 1])) : x.startsWith(groups[i + 1]));
-					if (index === -1) throw `Invalid time value: ${groups[i + 1]}`;
-					s += times[index === 0 ? 0 : index + 1] * groups[i];
-				}
-			}
-	
-			if (s < 0) throw 'Time value too large';
-			return new Date(startTime + s * 1000);
-	
-		}
 	}
 
 	// postCode(str, type, desc) {

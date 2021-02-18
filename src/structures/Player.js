@@ -1,5 +1,3 @@
-const linkRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
-
 class Player extends require('@lavacord/discord.js').Player {
 	constructor(...args) {
 		super(...args);
@@ -19,8 +17,8 @@ class Player extends require('@lavacord/discord.js').Player {
 			}
 
 			if (this.queue.length === 1 && !this.loop) {
-				this.queue = []
-				this.updateWS()
+				this.queue = [];
+				this.updateWS();
 				this.node.manager.leave(this.id);
 				this.node.manager.client.players.delete(this.channel.guild.id);
 				return this.channel?.send('Queue has concluded.');
@@ -38,7 +36,7 @@ class Player extends require('@lavacord/discord.js').Player {
 			this.play(this.queue[this.position].track);
 
 			this.channel?.send(`Playing **${this.queue[this.position].info.title}**`);
-			this.updateWS()
+			this.updateWS();
 		});
 	}
 

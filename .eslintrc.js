@@ -34,6 +34,6 @@ module.exports = {
 		'no-unused-vars': [
 			'warn'
 		],
-		"space-unary-ops": 2
+		'space-unary-ops': 2
 	}
 };
