@@ -1,18 +1,12 @@
 module.exports = {
 	'env': {
 		'commonjs': true,
-		'es2020': true,
-		'browser': true,
+		'es2021': true,
 		'node': true
 	},
 	'extends': 'eslint:recommended',
-	'parser': 'babel-eslint',
 	'parserOptions': {
-		'ecmaVersion': 11,
-		'sourceType': 'module',
-		'ecmaFeatures': {
-			'impliedStrict': true
-		}
+		'ecmaVersion': 12
 	},
 	'rules': {
 		'indent': [
@@ -28,12 +22,8 @@ module.exports = {
 			'single'
 		],
 		'semi': [
-			'warn',
+			'error',
 			'always'
-		],
-		'no-unused-vars': [
-			'warn'
-		],
-		'space-unary-ops': 2
+		]
 	}
 };

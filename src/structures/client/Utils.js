@@ -75,32 +75,20 @@ class Utils {
 		else return x;
 	}
 
-	static duration(ms) {
-		let str = '';
-		if (str || ms >= 3600000) (str += `${ms / 3600000 | 0}` + ':') && (ms -= (ms / 3600000 | 0) * 3600000);
-		(str += (str ? `${ms / 60000 | 0}`.padStart(2, '0') : `${ms / 60000 | 0}`) + ':') && (ms -= (ms / 60000 | 0) * 60000);
-		str += `${ms / 1000 | 0}`.padStart(2, '0');
-		return str;
+	postCode(str, type, desc) {
+		if (!str) return 'No text provided.';
+		require('child_process').exec('mkdir ../src/public/evals');
+		const key = this.createCode(6);
+		require('fs').writeFileSync(`../src/public/evals/${key}.html`, require('../src/public/assets/html.js')(str, key, type, desc)
+		);
+		return `https://${process.env.PROJECT_DOMAIN}.glitch.me/evals/${key}.html`;
 	}
-
-	// postCode(str, type, desc) {
-	//   if (!str) return 'No text provided.';
-	//   require('child_process').exec('mkdir ../src/public/evals')
-	//   const key = this.createCode(6);
-	//   require('fs').writeFileSync(`../src/public/evals/${key}.html`, require('../src/public/assets/html.js')(str, key, type, desc)
-	//   );
-	//   return `https://${process.env.PROJECT_DOMAIN}.glitch.me/evals/${key}.html`;
-	// }
 
 	static createCode(length) {
 		const chars = '0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
 		let str = '';
 		while (length--) str += chars[(Math.random() * chars.length) | 0];
 		return str;
-	}
-
-	static escapeRegEx(string) {
-		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
 	static createAce(code) {
