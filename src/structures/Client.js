@@ -7,7 +7,7 @@ class Client extends require('discord.js').Client {
 		});
 
 		this.config = require('../../config.json');
-		this.login(this.config.token);
+		this.login(process.env.token);
 	}
 }
 

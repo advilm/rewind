@@ -2,3 +2,4 @@ node_modules
 evals
 test.js
 config.json
+.env
