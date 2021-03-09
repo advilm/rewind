@@ -6,7 +6,6 @@ class Client extends require('discord.js').Client {
 			console.log(`Logged in as ${this.user.tag} with ${this.guilds.cache.size} guilds`);
 		});
 
-		this.config = require('../../config.json');
 		this.login(process.env.token);
 	}
 }

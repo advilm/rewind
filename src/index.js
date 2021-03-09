@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 new (require('./structures/extender.js'))();
 new (require('./structures/console.js'))();
 
@@ -37,7 +39,7 @@ fastify.post('/authenticate', async (request, reply) => {
 	const res = await req('https://discord.com/api/v8/oauth2/token', 'POST')
 		.body(require('querystring').encode({
 			'client_id': client.user.id,
-			'client_secret': client.config.secret,
+			'client_secret': process.env.secret,
 			'grant_type': 'authorization_code',
 			'code': request.body.code,
 			'redirect_uri': 'https://rewind.advil.cf/callback',
