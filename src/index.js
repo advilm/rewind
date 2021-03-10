@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 new (require('./structures/extender.js'))();
 new (require('./structures/console.js'))();
 
@@ -29,39 +27,43 @@ Reflect.defineProperty(Map.prototype, 'push', {
 	}
 });
 
-const fastify = require('fastify')({ logger: true })
+const fastify = require('fastify')({ logger: true });
 
 fastify.register(require('fastify-cors'), {
 	origin: ['https://rewind.advil.cf', 'http://localhost:3000']
-})
+});
 
-fastify.post('/authenticate', async (request, reply) => {
-	const res = await req('https://discord.com/api/v8/oauth2/token', 'POST')
+fastify.post('/auth', async (request, reply) => {
+	const token = await req('https://discord.com/api/v8/oauth2/token', 'POST')
 		.body(require('querystring').encode({
 			'client_id': client.user.id,
-			'client_secret': process.env.secret,
+			'client_secret': client.config.secret,
 			'grant_type': 'authorization_code',
 			'code': request.body.code,
-			'redirect_uri': 'https://rewind.advil.cf/callback',
+			'redirect_uri': 'https://rewind.advil.cf',
 			'scope': 'identify guilds'
 		}))
 		.header({ 'Content-Type': 'application/x-www-form-urlencoded' })
-		.json()
+		.json();
 
 	const user = await req('https://discord.com/api/v8/users/@me', 'GET')
-		.header({ 'Authorization': `Bearer ${res.access_token}` })
-		.json()
+		.header({ 'Authorization': `Bearer ${token.access_token}` })
+		.json();
 
-	console.log(user, res)
+	console.log(token, user);
 
-	return { access_token: res.access_token, username: user.username }
+	return { 
+		access_token: token.access_token, 
+		refresh_token: token.refresh_token, 
+		userid: user.id 
+	};
 });
 
 (async () => {
 	try {
-		await fastify.listen(3001)
+		await fastify.listen(3001);
 	} catch (err) {
-		fastify.log.error(err)
-		process.exit(1)
+		fastify.log.error(err);
+		process.exit(1);
 	}
 })();
