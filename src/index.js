@@ -40,7 +40,7 @@ fastify.post('/auth', async (request, reply) => {
 			'client_secret': client.config.secret,
 			'grant_type': 'authorization_code',
 			'code': request.body.code,
-			'redirect_uri': 'http://rewind.advil.cf/callback',
+			'redirect_uri': 'https://rewind.advil.cf/callback',
 			'scope': 'identify guilds'
 		}))
 		.header({ 'Content-Type': 'application/x-www-form-urlencoded' })
