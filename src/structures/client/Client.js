@@ -24,7 +24,7 @@ class Client extends require('discord.js').Client {
 			this.manager = new Manager(this, this.config.lavalink.nodes, {
 				user: this.user.id,
 				shards: 1,
-				Player: require('../Player.js'),
+				player: require('../Player.js'),
 			});
 
 			this.manager.connect();
