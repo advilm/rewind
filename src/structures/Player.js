@@ -20,7 +20,6 @@ class Player extends require('@lavacord/discord.js').Player {
 
 			if (this.queue.length === 1 && !this.loop) {
 				this.queue = []
-				this.updateWS()
 				this.node.manager.leave(this.id);
 				this.node.manager.client.players.delete(this.channel.guild.id);
 				return this.channel?.send('Queue has concluded.');
@@ -38,7 +37,6 @@ class Player extends require('@lavacord/discord.js').Player {
 			this.play(this.queue[this.position].track);
 
 			this.channel?.send(`Playing **${this.queue[this.position].info.title}**`);
-			this.updateWS()
 		});
 	}
 
@@ -47,13 +45,6 @@ class Player extends require('@lavacord/discord.js').Player {
 		else if (end <= this.position) this.position++;
 		
 		this.queue.splice(end, 0, ...this.queue.splice(start, 1));
-	}
-
-	updateWS() {
-		this.node.manager.client.wsConnections.get(this.id)?.forEach(ws => {
-			const { queue, position, state, timestamp, paused, shuffle, loop } = this;
-			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
-		});
 	}
 }
 
