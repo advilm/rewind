@@ -44,11 +44,6 @@ class LoadPlaylist extends Command {
 		if (!player.playing) {
 			player.play(player.queue[player.position].track);
 		}
-
-		this.client.wsConnections.get(msg.guild.id).forEach(ws => {
-			const { queue, position, state, timestamp, paused, shuffle, loop } = player;
-			ws.send(JSON.stringify({ status: 'ok', event: 'queueUpdate', data: { queue, position, state, timestamp, paused, shuffle, loop } }));
-		});
 	}
 }
 
