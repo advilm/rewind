@@ -16,7 +16,8 @@ struct Config {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-    let config: Config = toml::from_str(&fs::read_to_string("config.toml")?)?;
+    let contents: String = fs::read_to_string("config.toml").expect("Failed to read config.toml");
+    let config: Config = toml::from_str(&contents).expect("Failed to parse config.toml contents");
 
     // This is the default scheme. It will automatically create as many
     // shards as is suggested by Discord.
