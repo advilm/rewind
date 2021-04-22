@@ -1,0 +1,17 @@
+[package]
+name = "rewind"
+version = "0.1.0"
+authors = ["Adil Mohiuddin <amohi9046@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+tokio = { version = "1.5.0", features = ["full"] }
+twilight-cache-inmemory = "0.3.5"
+twilight-gateway = "0.3.4"
+twilight-http = "0.3.7"
+twilight-model = "0.3.6"
+twilight-lavalink = "0.3.2"
+futures = "0.3.14"
+serde = "1.0.125"
+serde_derive = "1.0.125"
+toml = "0.5.8"
