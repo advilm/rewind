@@ -1,6 +1,6 @@
 use futures::stream::StreamExt;
+
 use serde_derive::Deserialize;
-use std::{error::Error, fs};
 
 use twilight_cache_inmemory::{InMemoryCache, ResourceType};
 use twilight_gateway::{
@@ -8,7 +8,6 @@ use twilight_gateway::{
 };
 use twilight_http::Client as HttpClient;
 use twilight_model::gateway::Intents;
-
 
 mod events;
 
@@ -18,8 +17,8 @@ struct Config {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-    let contents: String = fs::read_to_string("config.toml").expect("Failed to read config.toml");
+async fn main() -> rewind::Res<()> {
+    let contents: String = std::fs::read_to_string("config.toml").expect("Failed to read config.toml");
     let config: Config = toml::from_str(&contents).expect("Failed to parse config.toml contents");
 
     
