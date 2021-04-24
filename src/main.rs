@@ -6,11 +6,11 @@ use twilight_cache_inmemory::{InMemoryCache, ResourceType};
 use twilight_gateway::{
     cluster::{Cluster, ShardScheme}
 };
-use twilight_http::Client as HttpClient;
+
 use twilight_model::gateway::Intents;
 
 mod events;
-
+mod commands;
 #[derive(Deserialize)]
 struct Config {
     token: String,
@@ -18,34 +18,24 @@ struct Config {
 
 #[tokio::main]
 async fn main() -> rewind::Res<()> {
-    let contents: String = std::fs::read_to_string("config.toml").expect("Failed to read config.toml");
+    let contents = std::fs::read_to_string("config.toml").expect("Failed to read config.toml");
     let config: Config = toml::from_str(&contents).expect("Failed to parse config.toml contents");
 
-    
-
-    // This is the default scheme. It will automatically create as many
-    // shards as is suggested by Discord.
     let scheme = ShardScheme::Auto;
 
-    // Use intents to only receive guild message events.
     let cluster = Cluster::builder(&config.token, Intents::GUILD_MESSAGES)
         .shard_scheme(scheme)
         .build()
         .await?;
 
-    // Start up the cluster.
     let cluster_spawn = cluster.clone();
 
-    // Start all shards in the cluster in the background.
     tokio::spawn(async move {
         cluster_spawn.up().await;
     });
 
-    // HTTP is separate from the gateway, so create a new client.
-    let http = HttpClient::new(&config.token);
+    let client = rewind::Client::new(&config.token);
 
-    // Since we only care about new messages, make the cache only
-    // cache new messages.
     let cache = InMemoryCache::builder()
         .resource_types(ResourceType::MESSAGE)
         .build();
@@ -53,12 +43,10 @@ async fn main() -> rewind::Res<()> {
     let mut events = cluster.events();
 
     
-    // Process each event as they come in.
     while let Some((shard_id, event)) = events.next().await {
-        // Update the cache with the event.
         cache.update(&event);
 
-        tokio::spawn(events::handle_event(shard_id, event, http.clone()));
+        tokio::spawn(events::handle_event(shard_id, event, client.clone()));
     }
 
     Ok(())
