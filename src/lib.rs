@@ -1,3 +1,5 @@
+pub mod models;
+
 pub type Res<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 pub use twilight_http::Client;
@@ -22,25 +24,25 @@ pub fn s(vector: Vec<&str>) -> Vec<String> {
     v
 }
 
-#[macro_export]
-macro_rules! modtest {
-    ( $( $x:expr ),* ) => {
-        {
-            let mut temp_vec = Vec::new();
-            $(
-                for entry in std::fs::read_dir($x)? {
-                    let entry = entry?;
-                    let path = std::path::Path::new(&entry.file_name());
+// #[macro_export]
+// macro_rules! modtest {
+//     ( $( $x:expr ),* ) => {
+//         {
+//             let mut temp_vec = Vec::new();
+//             $(
+//                 for entry in std::fs::read_dir($x)? {
+//                     let entry = entry?;
+//                     let path = std::path::Path::new(&entry.file_name());
 
                     
-                    println!("{:?}", entry);
-                }
-                temp_vec.push($x);
-            )*
-            temp_vec
-        }
-    };
-}
+//                     println!("{:?}", entry);
+//                 }
+//                 temp_vec.push($x);
+//             )*
+//             temp_vec
+//         }
+//     };
+// }
 
 
 // fn source_file_names<P: AsRef<Path>>(dir: P) -> Result<Vec<String>> {
