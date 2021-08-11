@@ -1,10 +1,11 @@
 #[allow(unused_imports)]
 use actix_web::{get, web, App, HttpRequest, HttpServer};
-
 use rewind::models::{Config, Query};
+use qstring::QString;
 
 #[get("/auth")]
 async fn auth(req: HttpRequest, data: web::Data<Query>) -> String {
+    data.code = Some(QString::from(req.query_string()).get("code").unwrap().to_string());
     let token = reqwest::Client::new()
         .post("https://discord.com/api/v9/oauth2/token")
         .body(serde_urlencoded::to_string(data).unwrap());
