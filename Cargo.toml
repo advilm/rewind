@@ -5,7 +5,7 @@ authors = ["Adil Mohiuddin <amohi9046@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-tokio = { version = "1.5.0", features = ["full"] }
+tokio = { version = "1.8.4", features = ["full"] }
 twilight-cache-inmemory = "0.3.5"
 twilight-gateway = "0.3.4"
 twilight-http = "0.3.7"
